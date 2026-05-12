@@ -730,18 +730,20 @@ app.get('/api/attribution/utm', async (req, res) => {
 });
 
 // =============================================
-// SERVE REACT BUILD (producción / Vercel)
+// SERVE REACT BUILD (solo en local, Vercel sirve dist/ automáticamente)
 // =============================================
-app.use(express.static(path.join(__dirname, 'dist')));
-app.get('*', (req, res, next) => {
-  if (req.path.startsWith('/api') || req.path.startsWith('/auth')) return next();
-  const indexPath = path.join(__dirname, 'dist', 'index.html');
-  if (fs.existsSync(indexPath)) {
-    res.sendFile(indexPath);
-  } else {
-    next();
-  }
-});
+if (!process.env.VERCEL) {
+  app.use(express.static(path.join(__dirname, 'dist')));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/auth')) return next();
+    const indexPath = path.join(__dirname, 'dist', 'index.html');
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      next();
+    }
+  });
+}
 
 // =============================================
 // START SERVER (solo en local, no en Vercel)
