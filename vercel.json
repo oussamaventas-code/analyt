@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "builds": [
+    { "src": "server.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/server.js" },
+    { "src": "/auth/(.*)", "dest": "/server.js" },
+    { "src": "/_next/(.*)", "dest": "/$1" },
+    { "src": "/(.*\\.(js|css|svg|png|ico|woff2?))", "dest": "/dist/$1" },
+    { "src": "/(.*)", "dest": "/server.js" }
+  ]
+}
