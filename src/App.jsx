@@ -10,6 +10,8 @@ import SettingsPage from './pages/SettingsPage';
 import { getConfigStatus, getCombinedRoas, getShopifyAnalytics, getMetaInsights, getMetaCampaigns, checkAlerts } from './api';
 import { generateDemoData, generateDemoCampaigns, generateDemoShopifyOrders } from './demoData';
 import AttributionPage from './pages/AttributionPage';
+import CalculatorPage from './pages/CalculatorPage';
+import { useTranslation } from './i18n/useTranslation';
 
 function getDefaultDateRange() {
   const until = new Date().toISOString().split('T')[0];
@@ -18,6 +20,7 @@ function getDefaultDateRange() {
 }
 
 export default function App() {
+  const { t } = useTranslation();
   const [activePage, setActivePage] = useState('dashboard');
   const [dateRange, setDateRange] = useState(getDefaultDateRange);
   const [loading, setLoading] = useState(false);
@@ -150,6 +153,8 @@ export default function App() {
         return <RoasPage data={dashboardData} loading={loading} />;
       case 'attribution':
         return <AttributionPage isDemo={isDemo} dateRange={dateRange} />;
+      case 'calculator':
+        return <CalculatorPage />;
       case 'settings':
         return <SettingsPage />;
       default:
@@ -158,29 +163,34 @@ export default function App() {
   };
 
   const getBannerMessage = () => {
+    const linkBtn = { color: 'var(--accent-blue)', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit' };
     if (isDemo) {
       return (
         <div className="alert-banner">
-          🎭 Modo Demo — Mostrando datos de ejemplo. <button onClick={() => setActivePage('settings')} style={{ color: 'var(--accent-blue)', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit' }}>Configura tus APIs</button> para ver datos reales.
+          🎭 {t('banner.demoMode')} <button onClick={() => setActivePage('settings')} style={linkBtn}>{t('banner.configureApis')}</button> {t('banner.forRealData')}
         </div>
       );
     }
     if (partialMode === 'shopify-only') {
       return (
         <div className="alert-banner" style={{ borderColor: 'rgba(16, 185, 129, 0.3)', background: 'rgba(16, 185, 129, 0.08)' }}>
-          🛍️ Conectado a <strong style={{ color: '#10b981', margin: '0 4px' }}>Shopify</strong> (datos reales). Meta Ads no configurado — <button onClick={() => setActivePage('settings')} style={{ color: 'var(--accent-blue)', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit' }}>configurar Meta</button> para análisis cruzado.
+          🛍️ {t('banner.shopifyOnly')} <strong style={{ color: '#10b981', margin: '0 4px' }}>Shopify</strong> {t('banner.shopifyOnlyMid')} <button onClick={() => setActivePage('settings')} style={linkBtn}>{t('banner.configureMeta')}</button> {t('banner.forCrossAnalysis')}
         </div>
       );
     }
     if (partialMode === 'meta-only') {
       return (
         <div className="alert-banner" style={{ borderColor: 'rgba(59, 130, 246, 0.3)', background: 'rgba(59, 130, 246, 0.08)' }}>
-          📘 Conectado a <strong style={{ color: '#3b82f6', margin: '0 4px' }}>Meta Ads</strong> (datos reales). Shopify no configurado — <button onClick={() => setActivePage('settings')} style={{ color: 'var(--accent-blue)', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit' }}>configurar Shopify</button> para análisis cruzado.
+          📘 {t('banner.shopifyOnly')} <strong style={{ color: '#3b82f6', margin: '0 4px' }}>Meta Ads</strong> {t('banner.metaOnlyMid')} <button onClick={() => setActivePage('settings')} style={linkBtn}>{t('banner.configureShopify')}</button> {t('banner.forCrossAnalysis')}
         </div>
       );
     }
     return null;
   };
+
+  const themeClass = activePage === 'campaigns' ? 'theme-meta'
+    : activePage === 'shopify' ? 'theme-shopify'
+    : '';
 
   return (
     <div className="app-layout">
@@ -200,8 +210,8 @@ export default function App() {
           loading={loading}
         />
 
-        <div className="page-content">
-          {activePage !== 'settings' && getBannerMessage()}
+        <div className={`page-content ${themeClass}`}>
+          {activePage !== 'settings' && activePage !== 'calculator' && getBannerMessage()}
           {renderPage()}
         </div>
       </main>

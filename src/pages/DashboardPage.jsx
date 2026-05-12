@@ -8,6 +8,7 @@ import {
   CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
 import AIInsights from '../components/AIInsights';
+import { useTranslation } from '../i18n/useTranslation';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -30,16 +31,19 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function DashboardPage({ data, campaignsData, loading }) {
+  const { t, lang } = useTranslation();
+  const locale = lang === 'es' ? 'es-ES' : 'en-US';
+
   if (loading) {
-    return <div className="loading-container"><div className="spinner" /><p>Cargando datos...</p></div>;
+    return <div className="loading-container"><div className="spinner" /><p>{t('header.loading')}</p></div>;
   }
 
   if (!data) {
     return (
       <div className="empty-state">
         <div className="empty-state-icon">📊</div>
-        <h3>Sin datos disponibles</h3>
-        <p>Configura tus APIs en la sección de Configuración o pulsa Actualizar.</p>
+        <h3>{t('common.noData')}</h3>
+        <p>{t('banner.configureApis')}</p>
       </div>
     );
   }
@@ -52,14 +56,14 @@ export default function DashboardPage({ data, campaignsData, loading }) {
 
       {/* KPI Cards */}
       <div className="kpi-grid">
-        <KpiCard label="Gasto Total" value={`€${parseFloat(meta.totalSpend).toLocaleString('es-ES', { minimumFractionDigits: 2 })}`} icon={DollarSign} color="blue" />
-        <KpiCard label="Ingresos" value={`€${parseFloat(shopify.totalRevenue).toLocaleString('es-ES', { minimumFractionDigits: 2 })}`} icon={Banknote} color="green" />
-        <KpiCard label="ROAS" value={`${combined.roas}x`} icon={TrendingUp} color="purple" />
-        <KpiCard label="Beneficio" value={`€${parseFloat(combined.profit).toLocaleString('es-ES', { minimumFractionDigits: 2 })}`} icon={Target} color={parseFloat(combined.profit) >= 0 ? 'green' : 'orange'} />
-        <KpiCard label="Impresiones" value={parseInt(meta.totalImpressions).toLocaleString('es-ES')} icon={Eye} color="blue" />
-        <KpiCard label="Clics" value={parseInt(meta.totalClicks).toLocaleString('es-ES')} icon={MousePointerClick} color="purple" />
-        <KpiCard label="Pedidos" value={shopify.totalOrders} icon={ShoppingCart} color="green" />
-        <KpiCard label="Margen" value={`${combined.profitMargin}%`} icon={Percent} color="orange" />
+        <KpiCard label={t('kpi.totalSpend')} value={`€${parseFloat(meta.totalSpend).toLocaleString(locale, { minimumFractionDigits: 2 })}`} icon={DollarSign} color="blue" />
+        <KpiCard label={t('kpi.revenue')} value={`€${parseFloat(shopify.totalRevenue).toLocaleString(locale, { minimumFractionDigits: 2 })}`} icon={Banknote} color="green" />
+        <KpiCard label={t('kpi.roas')} value={`${combined.roas}x`} icon={TrendingUp} color="purple" />
+        <KpiCard label={t('kpi.profit')} value={`€${parseFloat(combined.profit).toLocaleString(locale, { minimumFractionDigits: 2 })}`} icon={Target} color={parseFloat(combined.profit) >= 0 ? 'green' : 'orange'} />
+        <KpiCard label={t('kpi.impressions')} value={parseInt(meta.totalImpressions).toLocaleString(locale)} icon={Eye} color="blue" />
+        <KpiCard label={t('kpi.clicks')} value={parseInt(meta.totalClicks).toLocaleString(locale)} icon={MousePointerClick} color="purple" />
+        <KpiCard label={t('kpi.orders')} value={shopify.totalOrders} icon={ShoppingCart} color="green" />
+        <KpiCard label={t('kpi.margin')} value={`${combined.profitMargin}%`} icon={Percent} color="orange" />
       </div>
 
       {/* Charts */}

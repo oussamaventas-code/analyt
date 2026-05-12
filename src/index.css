@@ -925,3 +925,154 @@ input, select { font-family: inherit; }
 .recharts-tooltip-wrapper {
   outline: none !important;
 }
+
+/* ===========================
+   PLATFORM THEMES
+   =========================== */
+
+/* Meta Ads Theme — Facebook blue, sharper UI */
+.theme-meta {
+  --accent-blue: #1877F2;
+  --accent-blue-glow: rgba(24, 119, 242, 0.3);
+  --accent-purple: #4267B2;
+  --accent-purple-glow: rgba(66, 103, 178, 0.3);
+  --bg-card: #1c2440;
+  --bg-card-hover: #243056;
+  --gradient-meta: linear-gradient(135deg, #1877F2, #4267B2);
+  --shadow-glow-blue: 0 0 30px rgba(24, 119, 242, 0.2);
+}
+
+.theme-meta .kpi-card::before,
+.theme-meta .chart-card::before {
+  background: var(--gradient-meta) !important;
+}
+
+.theme-meta .btn-refresh,
+.theme-meta button[type="submit"] {
+  background: #1877F2;
+  border-color: #1877F2;
+}
+
+.theme-meta h2 {
+  background: linear-gradient(90deg, #1877F2, #4267B2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Shopify Theme — Light mode, Shopify green */
+.theme-shopify {
+  --bg-primary: #f6f6f7;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f9fafb;
+  --bg-input: #f1f1f2;
+  --bg-glass: rgba(255, 255, 255, 0.85);
+
+  --text-primary: #202223;
+  --text-secondary: #6d7175;
+  --text-muted: #8c9196;
+
+  --accent-blue: #008060;
+  --accent-blue-glow: rgba(0, 128, 96, 0.2);
+  --accent-purple: #50b083;
+  --accent-purple-glow: rgba(80, 176, 131, 0.2);
+  --accent-green: #008060;
+  --accent-green-glow: rgba(0, 128, 96, 0.2);
+
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-active: rgba(0, 128, 96, 0.4);
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+
+  background: #f6f6f7 !important;
+  color: #202223;
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.theme-shopify .kpi-card,
+.theme-shopify .chart-card,
+.theme-shopify .settings-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  color: #202223;
+}
+
+.theme-shopify .kpi-card::before,
+.theme-shopify .chart-card::before {
+  background: linear-gradient(135deg, #008060, #50b083) !important;
+}
+
+.theme-shopify h2,
+.theme-shopify h3,
+.theme-shopify .chart-card-title,
+.theme-shopify .kpi-value,
+.theme-shopify table td,
+.theme-shopify table th {
+  color: #202223 !important;
+}
+
+.theme-shopify .kpi-label,
+.theme-shopify .chart-card-subtitle {
+  color: #6d7175 !important;
+}
+
+.theme-shopify .data-table th {
+  background: #fafbfb;
+  color: #6d7175 !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.theme-shopify .data-table tr:hover {
+  background: #f6f6f7;
+}
+
+.theme-shopify .data-table td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.theme-shopify .badge-success,
+.theme-shopify [style*="rgba(16, 185, 129"] {
+  color: #008060 !important;
+}
+
+.theme-shopify .recharts-text {
+  fill: #6d7175 !important;
+}
+
+.theme-shopify .recharts-cartesian-grid line {
+  stroke: rgba(0, 0, 0, 0.06) !important;
+}
+
+
+/* Calculator buttons */
+.calc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.calc-btn:hover {
+  border-color: var(--accent-blue);
+  background: var(--bg-card-hover);
+}
+.calc-btn-primary {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: #fff;
+}
+.calc-btn-primary:hover {
+  background: var(--accent-blue);
+  opacity: 0.9;
+}
