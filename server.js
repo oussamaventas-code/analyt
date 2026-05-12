@@ -221,18 +221,54 @@ app.get('/auth/shopify/callback', async (req, res) => {
       }
     }
 
-    res.send(`
-      <html><body style="font-family:sans-serif;padding:40px;background:#0a0e1a;color:#fff;text-align:center">
-        <div style="max-width:500px;margin:60px auto;background:#1a1f35;padding:40px;border-radius:16px;border:1px solid rgba(16,185,129,0.3)">
-          <div style="font-size:48px;margin-bottom:16px">✅</div>
-          <h2 style="color:#10b981;margin-bottom:8px">Shopify conectado</h2>
-          <p style="color:#8b93a7;margin-bottom:24px">Token guardado correctamente. Ya puedes cerrar esta ventana.</p>
-          <a href="http://localhost:5173" style="background:#3b82f6;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600">
-            Volver al Dashboard →
-          </a>
-        </div>
-      </body></html>
-    `);
+    const dashboardUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:5173';
+
+    if (process.env.VERCEL) {
+      // En Vercel el filesystem es read-only — mostrar el token para que el usuario lo añada como env var
+      res.send(`
+        <html><body style="font-family:sans-serif;padding:40px;background:#0a0e1a;color:#fff">
+          <div style="max-width:680px;margin:40px auto;background:#1a1f35;padding:40px;border-radius:16px;border:1px solid rgba(16,185,129,0.3)">
+            <div style="font-size:48px;margin-bottom:16px;text-align:center">✅</div>
+            <h2 style="color:#10b981;margin-bottom:8px;text-align:center">OAuth completado</h2>
+            <p style="color:#8b93a7;margin-bottom:24px;text-align:center">Falta un último paso para que Vercel guarde el token permanentemente.</p>
+
+            <div style="background:#0a0e1a;border-radius:8px;padding:16px;margin-bottom:20px">
+              <div style="color:#8b93a7;font-size:12px;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Tu access token (cópialo)</div>
+              <code style="display:block;color:#10b981;word-break:break-all;font-size:13px;user-select:all">${token}</code>
+            </div>
+
+            <div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:8px;padding:16px;margin-bottom:20px">
+              <p style="color:#fff;margin:0 0 12px;font-weight:600">📋 Pasos:</p>
+              <ol style="color:#8b93a7;margin:0;padding-left:20px;line-height:1.8">
+                <li>Copia el token de arriba</li>
+                <li>Ve a <a href="https://vercel.com/dashboard" target="_blank" style="color:#3b82f6">vercel.com/dashboard</a> → tu proyecto → Settings → Environment Variables</li>
+                <li>Añade <code style="background:#0a0e1a;padding:2px 6px;border-radius:4px">SHOPIFY_ACCESS_TOKEN</code> con el valor copiado (Production)</li>
+                <li>Redeploy el proyecto</li>
+              </ol>
+            </div>
+
+            <div style="text-align:center">
+              <a href="${dashboardUrl}" style="background:#3b82f6;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;display:inline-block">
+                Volver al Dashboard →
+              </a>
+            </div>
+          </div>
+        </body></html>
+      `);
+    } else {
+      res.send(`
+        <html><body style="font-family:sans-serif;padding:40px;background:#0a0e1a;color:#fff;text-align:center">
+          <div style="max-width:500px;margin:60px auto;background:#1a1f35;padding:40px;border-radius:16px;border:1px solid rgba(16,185,129,0.3)">
+            <div style="font-size:48px;margin-bottom:16px">✅</div>
+            <h2 style="color:#10b981;margin-bottom:8px">Shopify conectado</h2>
+            <p style="color:#8b93a7;margin-bottom:24px">Token guardado correctamente. Ya puedes cerrar esta ventana.</p>
+            <a href="${dashboardUrl}" style="background:#3b82f6;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600">
+              Volver al Dashboard →
+            </a>
+          </div>
+        </body></html>
+      `);
+    }
   } catch (error) {
     console.error('OAuth callback error:', error.response?.data || error.message);
     res.status(500).send(`
