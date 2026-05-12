@@ -183,8 +183,10 @@ app.get('/auth/shopify', (req, res) => {
   }
   const state = crypto.randomBytes(16).toString('hex');
   oauthStates.add(state);
-  const scopes = 'read_orders,read_products,read_customers,read_analytics';
-  const redirectUri = `http://localhost:${PORT}/auth/shopify/callback`;
+  const scopes = 'read_orders,read_products,read_customers';
+  const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
+  const host = req.headers['x-forwarded-host'] || req.headers.host;
+  const redirectUri = `${protocol}://${host}/auth/shopify/callback`;
   const authUrl = `https://${store}/admin/oauth/authorize?client_id=${apiKey}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
   res.redirect(authUrl);
 });
